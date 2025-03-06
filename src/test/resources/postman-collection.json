@@ -1,0 +1,267 @@
+{
+	"info": {
+		"_postman_id": "8816fc27-8e07-44f2-85dd-885901d509c7",
+		"name": "postman-cli-test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13480936"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "GetPersons",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Content-Type header is application/json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has the required fields - id, firstname, lastname, and age\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('array');",
+							"    responseData.forEach(person => {",
+							"        pm.expect(person).to.have.property('id');",
+							"        pm.expect(person).to.have.property('firstname');",
+							"        pm.expect(person).to.have.property('lastname');",
+							"        pm.expect(person).to.have.property('age');",
+							"    });",
+							"});",
+							"",
+							"",
+							"pm.test(\"Age is a non-negative integer\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    responseData.forEach(function(person) {",
+							"        pm.expect(person.age).to.be.a('number').and.to.be.at.least(0);",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"3 elements in output\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.be.an('array').with.lengthOf(3);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/person/all",
+					"protocol": "http",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"port": "8080",
+					"path": [
+						"person",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddPerson",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Content-Type header is application/json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"Id, firstname, lastname, and age fields must exist in the response\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.id).to.exist;",
+							"    pm.expect(responseData.firstname).to.exist;",
+							"    pm.expect(responseData.lastname).to.exist;",
+							"    pm.expect(responseData.age).to.exist;",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 4,\n    \"firstname\": \"Yoann\",\n    \"lastname\": \"Simon\",\n    \"age\": 27\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/person/add",
+					"protocol": "http",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"port": "8080",
+					"path": [
+						"person",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetPersonsAfterAdd",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Content-Type header is application/json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has the required fields - id, firstname, lastname, and age\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('array');",
+							"    responseData.forEach(person => {",
+							"        pm.expect(person).to.have.property('id');",
+							"        pm.expect(person).to.have.property('firstname');",
+							"        pm.expect(person).to.have.property('lastname');",
+							"        pm.expect(person).to.have.property('age');",
+							"    });",
+							"});",
+							"",
+							"",
+							"pm.test(\"Age is a non-negative integer\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    responseData.forEach(function(person) {",
+							"        pm.expect(person.age).to.be.a('number').and.to.be.at.least(0);",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"4 elements in output\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.be.an('array').with.lengthOf(4);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/person/all",
+					"protocol": "http",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"port": "8080",
+					"path": [
+						"person",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RemovePerson",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Content type is application/json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"Id, firstname, lastname, and age properties exist in the response\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData).to.have.property('id');",
+							"    pm.expect(responseData).to.have.property('firstname');",
+							"    pm.expect(responseData).to.have.property('lastname');",
+							"    pm.expect(responseData).to.have.property('age');",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/person/remove/4",
+					"protocol": "http",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"port": "8080",
+					"path": [
+						"person",
+						"remove",
+						"4"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
